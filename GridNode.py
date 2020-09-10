@@ -1,6 +1,6 @@
 
 import direct.directbase.DirectStart
-from pandac.PandaModules import *
+from panda3d.core import *
 
 
 class GridNode:

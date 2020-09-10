@@ -30,10 +30,8 @@ class MyApp():
         self.collNodeCount = 0
         self.firstNode = None
         self.lowestVertex = -1
-        self.rightVertex = None
-        self.topVertex = None
-        self.toprightVertex = None
-        # Process the egg file and iterate 
+
+        # Process the egg file and iterate
         # through it
         self.egg = EggData()
         self.fname = Filename(sys.argv[1])
@@ -75,15 +73,15 @@ class MyApp():
             if type == "Full":
                 self.oldList.append(node)
                 # Find the correct vertex number to use
-                if self.lowestVertex == -1:
+                if (self.lowestVertex == -1):
                     self.analyzeVertex(node)
 
                     # Store the bottom left node
-                if self.firstNode is None:
+                if (self.firstNode == None):
                     self.firstNode = node
                 else:
-                    if (node.vertex[self.lowestVertex].getX() < self.firstNode.vertex[self.lowestVertex].getX()
-                            and node.vertex[self.lowestVertex].getZ() < self.firstNode.vertex[self.lowestVertex].getZ()):
+                    if node.vertex[self.lowestVertex].getX() < self.firstNode.vertex[self.lowestVertex].getX() and \
+                            node.vertex[self.lowestVertex].getZ() < self.firstNode.vertex[self.lowestVertex].getZ():
                         self.firstNode = node
 
                 self.nodeCount = self.nodeCount + 1
@@ -110,8 +108,8 @@ class MyApp():
             for c in range(int(sqrt(self.nodeCount)) - 1):  # sqrt
                 # Processing next col
                 for i in range(self.nodeCount):
-                    if (currentColNode.vertex[self.rightVertex] == self.oldList[i].vertex[self.lowestVertex]
-                            and currentColNode.vertex[self.toprightVertex] == self.oldList[i].vertex[self.topVertex]):
+                    if currentColNode.vertex[self.rightVertex] == self.oldList[i].vertex[self.lowestVertex] and \
+                            currentColNode.vertex[self.toprightVertex] == self.oldList[i].vertex[self.topVertex]:
                         nextColNode = self.oldList[i]
                 self.newList.append(nextColNode)
                 currentColNode = nextColNode
@@ -122,15 +120,15 @@ class MyApp():
 
             nextRowNode = None
             for i in range(self.nodeCount):
-                if (currentRowNode.vertex[self.toprightVertex] == self.oldList[i].vertex[self.rightVertex]
-                        and currentRowNode.vertex[self.topVertex] == self.oldList[i].vertex[self.lowestVertex]):
+                if currentRowNode.vertex[self.toprightVertex] == self.oldList[i].vertex[self.rightVertex] and \
+                        currentRowNode.vertex[self.topVertex] == self.oldList[i].vertex[self.lowestVertex]:
                     nextRowNode = self.oldList[i]
             self.newList.append(nextRowNode)
             currentRowNode = nextRowNode
             currentColNode = nextRowNode
 
     # Creates a combined List which has the correctly
-    # ordered nodes with collisions as None            
+    # ordered nodes with collisions as None
     def createCombinedGrid(self):
         for r in range(int(sqrt(self.nodeCount))):
             temp = []
@@ -153,19 +151,19 @@ class MyApp():
         file = open('navmesh.csv', 'w')
 
         # Grid Size
-        file.write('Grid Size ,')
+        file.write('Grid Size,')
         file.write(str(int(sqrt(self.nodeCount))))
-        file.write('\n NULL, NodeType, GridX, GridY, Length, Width, Height, PosX, PosY, PosZ')
+        file.write('\nNULL,NodeType,GridX,GridY,Length,Width,Height,PosX,PosY,PosZ')
         file.write('\n')
 
         for r in range(int(sqrt(self.nodeCount))):
             for c in range(int(sqrt(self.nodeCount))):
                 node = self.finalList[r][c]
-                if node is None:
-                    file.write('1, 0, 0, 0, 0, 0, 0, 0, 0, 0')
+                if node == None:
+                    file.write('1,1,0,0,0,0,0,0,0,0')
                     file.write('\n')
                 else:
-                    # For the nodes
+                    ## For the nodes
                     # NULL
                     file.write('0' + ',')
                     # Node Type (Main)
@@ -175,9 +173,9 @@ class MyApp():
                     # Grid Y
                     file.write(str(node.c) + ',')
                     # Length
-                    file.write(str(node.vertex[0].getX() - node.vertex[1].getX()) + ',')
+                    file.write(str(abs(node.vertex[0].getX() - node.vertex[1].getX())) + ',')
                     # Width
-                    file.write(str(node.vertex[0].getZ() - node.vertex[3].getZ()) + ',')
+                    file.write(str(abs(node.vertex[0].getZ() - node.vertex[3].getZ())) + ',')
                     # Height
                     file.write('0' + ',')
                     # PosX
@@ -193,7 +191,7 @@ class MyApp():
                     for i in range(8):
                         nnode = node.neighbors[i]
                         if nnode == None:
-                            file.write('1, 0, 0, 0, 0, 0, 0, 0, 0, 0')
+                            file.write('1,1,0,0,0,0,0,0,0,0')
                         else:
                             # NULL
                             file.write('0' + ',')
@@ -204,9 +202,9 @@ class MyApp():
                             # Grid Y
                             file.write(str(nnode.c) + ',')
                             # Length
-                            file.write(str(nnode.vertex[0].getX() - nnode.vertex[1].getX()) + ',')
+                            file.write(str(abs(nnode.vertex[0].getX() - nnode.vertex[1].getX())) + ',')
                             # Width
-                            file.write(str(nnode.vertex[0].getZ() - nnode.vertex[3].getZ()) + ',')
+                            file.write(str(abs(nnode.vertex[0].getZ() - nnode.vertex[3].getZ())) + ',')
                             # Height
                             file.write('0' + ',')
                             # PosX
@@ -218,7 +216,7 @@ class MyApp():
 
                         file.write('\n')
 
-    # HELPER FUNCTIONS
+    ## HELPER FUNCTIONS
 
     # Helper function which finds collisions
     def CollContains(self, chkNode):
@@ -234,15 +232,15 @@ class MyApp():
             # Setting the row and col parameters
             node.setRC(row, col)
 
-            # left top 
+            # left top
             if col > 0 and (row + 1) < sqrt(self.nodeCount):
                 node.neighbors[0] = self.finalList[row + 1][col - 1]
 
-            # left mid  
+            # left mid
             if col > 0:
                 node.neighbors[1] = self.finalList[row][col - 1]
 
-            # left bot     
+            # left bot
             if col > 0 and (row - 1) > 0:
                 node.neighbors[2] = self.finalList[row - 1][col - 1]
 
@@ -250,11 +248,11 @@ class MyApp():
             if (row - 1) > 0:
                 node.neighbors[3] = self.finalList[row - 1][col]
 
-            # bot right    
+            # bot right
             if (row - 1) > 0 and (col + 1) < sqrt(self.nodeCount):
                 node.neighbors[4] = self.finalList[row - 1][col + 1]
 
-            # right mid   
+            # right mid
             if (col + 1) < sqrt(self.nodeCount):
                 node.neighbors[5] = self.finalList[row][col + 1]
 
@@ -262,7 +260,7 @@ class MyApp():
             if (row + 1) < sqrt(self.nodeCount) and (col + 1) < sqrt(self.nodeCount):
                 node.neighbors[6] = self.finalList[row + 1][col + 1]
 
-            # top mid   
+            # top mid
             if (row + 1) < sqrt(self.nodeCount):
                 node.neighbors[7] = self.finalList[row + 1][col]
 
@@ -272,8 +270,8 @@ class MyApp():
         self.lowestVertex = 0
 
         for i in range(4):
-            if (node.vertex[i].getX() < node.vertex[self.lowestVertex].getX()
-                    and node.vertex[i].getZ() < node.vertex[self.lowestVertex].getZ()):
+            if node.vertex[i].getX() < node.vertex[self.lowestVertex].getX() and node.vertex[i].getZ() < node.vertex[
+                self.lowestVertex].getZ():
                 self.lowestVertex = i
 
         # top, left, right
