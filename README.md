@@ -20,3 +20,5 @@ This script creates a 'navmesh.csv' (which is used by the pathfinder in PandAI)
 To run the script, do: (Please use the correct syntax in the command line) 
 
 `python3 NavMeshGen.py fullMesh.egg collMesh.egg`
+
+You can test freshly generated navmesh.csv with [Static Obstacles](https://docs.panda3d.org/1.10/python/programming/pandai/pathfinding/static-obstacles) example
