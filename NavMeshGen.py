@@ -1,5 +1,6 @@
 import direct.directbase.DirectStart
 from panda3d.core import *
+from panda3d.egg import EggData, EggPolygon, EggGroupNode
 from GridNode import *
 from math import sqrt
 import sys
